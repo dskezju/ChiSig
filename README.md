@@ -4,7 +4,7 @@
 
 We construct a novel Chinese document offline signature forgery detection benchmark, namely `ChiSig`, which includes all tasks, i.e., signature detection, restoration, and verification.
 
-* Download Link: 
+* Download Link: [https://drive.google.com/file/d/176bG9Hp_uX9bJvIFt437wqAbEqEMqsO7/view?usp=sharing](https://drive.google.com/file/d/176bG9Hp_uX9bJvIFt437wqAbEqEMqsO7/view?usp=sharing)
 
 ## Description
 
@@ -18,7 +18,20 @@ The dataset consists of clean handwritten signatures, synthesized noisy handwrit
 
 We randomly generate 500 names and then let volunteers sign according to certain rules to get the clean signature data, which can be used for signature verification tasks. Then, we obtain scanned documents that can be used to synthesize backgrounds through public resources, such as [XFUND dataset](https://github.com/doc-analysis/XFUND), Chinese National Standards and patents. We randomly place the signatures in the background documents, so that we can obtain data that can be used for signature detection and signature reconstruction.
 
-For the time being, we only publish the signature data and the corresponding mask that we have obtained, users can obtain the background documents and perform document synthesis by themselves.
+For the time being, we only publish the signature data that we have obtained, users can obtain the background documents and perform document synthesis by themselves. The mask of the signature image can be obtained by the Otsu's method.
+
+```python
+import cv2
+
+# read image as gray scale
+image = cv2.imread("data/sign-filter/白光启-20-1.jpg", 0)
+blur = cv2.GaussianBlur(image, (5, 5), 0)
+# Otsu's method
+thresh, binarization = cv2.threshold(
+    blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+mask = ~binarization
+```
+The obtained signature image is named in the following format `name-id-number.jpg`, where `name` represents the name signed by volunteer, `id` represents the file id, and `number` represents the number of signatures. For example, if the name `A` is signed by four people, and then each person will sign five times to get a total of 20 samples. If we consider the name `A` signed by each person as a class, We obtained at least four different classes with five samples each class. If a signature image is named with a file id greater than 100, e.g. `id1 > 100`, it means it is a skilled forged one of the signature with file id `id1 − 100`.
 
 We may update our data in the future to improve its diversity
 
@@ -36,7 +49,7 @@ task are provided in our [paper](https://openaccess.thecvf.com/content/CVPR2022W
 
 Please consider to cite our paper when you use our dataset. 
 
-**Note**: The dataset can only be used for non-commercial purposes
+**NOTE**: The dataset can only be used for non-commercial purposes!
 
 ```
 @InProceedings{Yan_2022_CVPR,
